@@ -15,7 +15,7 @@ urlpatterns = [
     # API Routes
     path("api/feed/<int:page>", views.feed, name='api_feed'),
     path("api/single_profile/<id>", views.single_profile, name="single_profile"),
-    path("api/single_feed/<str:created_by>",
+    path("api/single_feed/<str:created_by>/<int:page>",
          views.single_feed, name="api_single_feed"),
     path("api/single_post/<id>", views.single_post, name="api_single_post"),
     path("api/check_like_status/<int:id>",

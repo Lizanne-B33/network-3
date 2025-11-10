@@ -9,12 +9,10 @@ if (
     load_feed(0)
     //console.log(memberName)
     if (memberName) {
-      console.log(memberName)
       formatted_username = username_format(memberName)
-      console.log(formatted_username)
       document.getElementById('nav_username').innerHTML =
         '<strong>' + formatted_username + '</strong>'
-      load_member_feed(memberName)
+      load_member_feed(memberName, 0)
     }
     // Listener for adding posts.  Triggers the submit button to disabled=true when the user inputs.
     const bodyElement = document.getElementById('id_body')
@@ -86,35 +84,29 @@ function load_feed(direction) {
       console.error('There was a problem with the fetch operation:', error)
     })
 }
-function load_single_feed(username) {
+
+function load_member_feed(memberName, direction) {
   // variables
-  // Clear the div so I don't get duplicates
-  document.querySelector('#profile-posts').innerHTML = ''
-  // Get Posts
-  fetch(`/api/single_feed/${username}`)
-    .then(response => response.json())
-    .then(posts => {
-      // send to format the list
-      if (Array.isArray(posts)) {
-        format_feed(posts, '#profile-posts')
-      } else {
-        document.getElementById('no-posts-msg').textContent = posts.text
-      }
-    })
-}
-function load_member_feed(memberName) {
-  // variables
-  username = memberName
-  //console.log(username)
+  created_by = memberName
+
+  // track page
+  page = page + direction
+
   // set views:
   show_member_post_view()
-  // Get Posts
+
+  // clears the posts from previous page.
+  document.getElementById('member-post-list').innerHTML = '' // Clear old posts
+
+  // activates post button if there is any input in the body.
   const bodyElement = document.getElementById('id_body')
   if (bodyElement) {
     bodyElement.addEventListener('input', activate_post_btn)
   }
   document.getElementById('create_edit_post').textContent = 'Create Post'
-  fetch(`/api/single_feed/${username}`)
+
+  // Get Posts
+  fetch(`/api/single_feed/${created_by}/${page} `)
     .then(response => response.json())
     .then(posts => {
       if (Array.isArray(posts)) {
@@ -124,7 +116,11 @@ function load_member_feed(memberName) {
         document.getElementById('no-posts-msg').textContent = posts.text
       }
     })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error)
+    })
 }
+
 function load_filtered_feed() {
   //document.querySelector('#filtered_posts').innerHTML = ''
   // Get Posts
@@ -406,7 +402,7 @@ function format_profile(member) {
   document.getElementById('follow-me').data_id = member.id
   document.getElementById('unfollow-me').data_id = member.id
 
-  load_single_feed(member.username)
+  load_member_feed(member.username)
 }
 
 function check_profile_owner(id) {

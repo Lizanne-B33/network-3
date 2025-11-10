@@ -35,7 +35,7 @@
                         <div class="col-12">
                             <img id="profile-img" class="img-fluid mx-0 d-block" alt="profile image" />
                         </div>
-                        <div class="col-12 mx=5" id="follow-btns">
+                        <div class="col-12 mx-5" id="follow-btns">
                             <!-- https://home.unicode.org/ -->
                             <button type="submit" class="follow-btn btn btn-default" id="follow-me" value="{{ user.id }}" disabled>
                                 &#x2795 &#x1F464 Follow
@@ -84,7 +84,16 @@
                 <div class="col-lg-6">
                     <div id="member-post-list">
                         <p id="no-posts-msg"></p>
-                        '
+                    </div>
+                    <br />
+                    <hr />
+                    <div id="pagination-mbr" class="row">
+                        <div id="p-previous-mbr" class="col-4">
+                            <button id="previous_btn_mbr" class="btn btn-primary pagination-btns" type="button">&laquo; Previous</button>
+                        </div>
+                        <div id="p-next-mbr" class="col-4">
+                            <button id="next_btn_mbr" class="btn btn-primary pagination-btns" type="button">Next &raquo;</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,10 +117,10 @@
                     </div>
                     <div class="row">
                         <!--Header-->
-                        <div col-4>
+                        <div class="col-4">
                             <img id="sender-img" />
                         </div>
-                        <div col-8>
+                        <div class="col-8">
                             <p class="text-capitalize" id="post-sender"></p>
                             <p class="font-italic font-weight-light" id="post-date"></p>
                         </div>

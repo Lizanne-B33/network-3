@@ -234,7 +234,7 @@ def single_profile(request, id):
         return JsonResponse(member.serialize())
 
 
-def single_feed(request, created_by):
+def single_feed(request, created_by, page):
     # collects the data for the posts that were created by that user.
     # since created by is a FK, I need to look up the User object by user name then filter by the user.
     user = get_object_or_404(User, username=created_by)
