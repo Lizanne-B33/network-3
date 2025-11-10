@@ -61,3 +61,7 @@
   font-size: 25px;
   margin-bottom: 15px;
 }
+
+.pagination-btns {
+  width: 100px;
+}
