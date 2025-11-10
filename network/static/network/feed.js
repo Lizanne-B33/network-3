@@ -212,6 +212,7 @@ function edit_my_post() {
   console.log('fetchPath', fetchPath)
   fetch(fetchPath)
     .then(response => {
+      // debugging
       if (!response.ok) {
         return response.text().then(text => {
           console.error('Server error:', text)
@@ -224,16 +225,20 @@ function edit_my_post() {
       document.getElementById('edit_post').innerHTML = data.form_html
       const form = document.getElementById('edit-post-form')
       form.addEventListener('submit', function (e) {
-        e.preventDefault()
+        e.preventDefault() // keeps focus on same page
         submit_edit_form(form, id)
       })
     })
+    // debugging
     .catch(error => console.error('Fetch error:', error))
 }
 
 function submit_edit_form(form, id) {
+  // Creates a form object from my FormData modelForm
   const formData = new FormData(form)
 
+  // Makes AJAX call to API that gets body data from DB.
+  // Headers send information that it is a AJAX call, and sends Token.
   fetch('/api/display_edit/' + id, {
     method: 'POST',
     headers: {
@@ -249,6 +254,7 @@ function submit_edit_form(form, id) {
           data.updated_post.body
         document.getElementById('edit_post').innerHTML = '' // Clear form
       } else {
+        // Debugging
         console.error('Validation errors:', data.errors)
       }
     })
@@ -256,8 +262,6 @@ function submit_edit_form(form, id) {
 }
 // --------------------------- Display Profile -------------------------//
 function load_profile(id) {
-  // variables
-
   // Get profile
   fetch(`/api/single_profile/${id}`)
     .then(response => response.json())
@@ -350,26 +354,25 @@ function checkLikeStatus(id) {
         document.getElementById('unlike-me').disabled = true
       }
     })
-  console.log('end of fetch stmt checkLikeStatus')
 }
 function get_post_for_likes() {
   // Called by listener when 'like-me' button is clicked
   button = document.getElementById('like-me')
   button.disabled = true
   document.getElementById('unlike-me').disabled = false
-  id = button.data_id
-  console.log('button data-id' + id)
+  id = button.getAttribute('data_id')
+  console.log('get post for likes id:' + id)
   fetch(`/api/update_likes/${id}`).then(get_new_count)
 }
 function get_post_for_unlikes() {
   button = document.getElementById('unlike-me')
   button.disabled = true
   document.getElementById('like-me').disabled = false
-  id = button.data_id
+  id = button.getAttribute('data_id')
   fetch(`/api/update_unlikes/${id}`).then(toggle_likes).then(get_new_count)
 }
 function get_new_count() {
-  const id = document.getElementById('like-me').data_id
+  const id = document.getElementById('like-me').getAttribute('data_id')
   fetch(`api/count_likes/${id}`)
     .then(response => response.json())
     .then(count => {
@@ -484,6 +487,9 @@ function show_profile_view() {
   document.querySelector('#member-posts').style.display = 'none'
   document.querySelector('#follow-btns').style.display = 'block'
   document.querySelector('#filtered-posts').style.display = 'none'
+  if (!memberName) {
+    document.querySelector('#follow-btns').style.display = 'none'
+  }
 }
 function show_single_post_view() {
   document.querySelector('#welcome').style.display = 'none'
@@ -495,7 +501,9 @@ function show_single_post_view() {
   document.querySelector('#filtered-posts').style.display = 'none'
   if (!memberName) {
     document.querySelector('#like-btns').style.display = 'none'
+    document.querySelector('#edit_post_btn').style.display = 'none'
   }
+  document.getElementById('edit_post').innerHTML = ''
 }
 function show_member_post_view() {
   document.querySelector('#welcome').style.display = 'block'
@@ -507,9 +515,7 @@ function show_member_post_view() {
   document.querySelector('#filtered-posts').style.display = 'none'
 }
 function show_filtered_posts_view() {
-  console.log('the show filtered post is triggered. ')
   load_filtered_feed()
-  console.log('filtered feed should have run ')
   document.querySelector('#welcome').style.display = 'none'
   document.querySelector('#all-posts').style.display = 'none'
   document.querySelector('#profile-posts').style.display = 'none'
