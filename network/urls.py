@@ -13,7 +13,7 @@ urlpatterns = [
     path("add_post", views.add_post, name="add_post"),
 
     # API Routes
-    path("api/feed", views.feed, name="api_feed"),
+    path("api/feed/<int:page>", views.feed, name='api_feed'),
     path("api/single_profile/<id>", views.single_profile, name="single_profile"),
     path("api/single_feed/<str:created_by>",
          views.single_feed, name="api_single_feed"),

@@ -201,10 +201,18 @@ def count_likes(request, id):
 # I added a nice view of the full post that mimics a social media post.
 # This view is accessed when the user clicks on the post title.
 # ---------------------------------------------------------------
-def feed(request):
+def feed(request, page):
+    print(f'page is {page}')
     posts = Post.objects
-    posts = posts.order_by("created_by", "-create_date").all()
-    return JsonResponse([post.serialize() for post in posts], safe=False)
+    # added id to make certain there are no duplicates
+    # caching to avoid misalignment.
+    posts = list(Post.objects.order_by("created_by", "-create_date", "-id"))
+    start = (page - 1) * 10
+    end = page * 10
+    p_posts = posts[start:end]
+
+    print(f"Page {page}: {[post.id for post in p_posts]}")
+    return JsonResponse([post.serialize() for post in p_posts], safe=False)
 
 
 # ---------------------------------------------------------------

@@ -1,9 +1,12 @@
+// Global variables
+let page = 1
+
 if (
   window.location.pathname !== '/login' &&
   window.location.pathname !== '/register'
 ) {
   document.addEventListener('DOMContentLoaded', function () {
-    load_feed()
+    load_feed(0)
     //console.log(memberName)
     if (memberName) {
       console.log(memberName)
@@ -38,25 +41,49 @@ if (
     document
       .getElementById('edit-post-button')
       .addEventListener('click', edit_my_post)
+
+    // Pagination Button: Listeners
+    document.getElementById('next_btn').addEventListener('click', function () {
+      load_feed(1)
+    })
+
+    // Pagination Buttons: manages the previous to make sure it doesn't go back too far.
+    document
+      .getElementById('previous_btn')
+      .addEventListener('click', function () {
+        if (page > 1) {
+          load_feed(-1)
+        }
+      })
   })
 }
 
-// --------- New Posts
-// Add Post: Enables the submit button when the there is input in the form.
-function activate_post_btn() {
-  document.getElementById('add_post_btn').disabled = false
-}
-function load_feed() {
-  //console.log(memberName)
+function load_feed(direction) {
+  //direction takes the input from the buttons.  Next = 1, Previous = -1.
   // variables
+  // track page
+  page = page + direction
+
   // set views
   show_all_posts_view()
   // Get Posts
-  fetch('/api/feed')
-    .then(response => response.json())
+
+  // clears the posts from previous page.
+  document.getElementById('all-posts').innerHTML = '' // Clear old posts
+
+  // Fetch with error handling with help from the duck.
+  fetch(`/api/feed/${page}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
     .then(posts => {
-      // send to format the list
       format_feed(posts, '#all-posts')
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error)
     })
 }
 function load_single_feed(username) {
@@ -108,6 +135,7 @@ function load_filtered_feed() {
       format_feed(posts, '#filtered-posts')
     })
 }
+
 function format_feed(posts, divStructure) {
   //console.log(divStructure)
   startDiv = document.querySelector(divStructure)
@@ -204,6 +232,87 @@ function format_feed(posts, divStructure) {
     })
   })
 }
+
+// --------------------------- Display one Post -------------------------//
+function load_single_post(id) {
+  // variables
+  // Get Posts
+  fetch(`/api/single_post/${id}`)
+    .then(response => response.json())
+    .then(post => {
+      // send to format the list
+      format_single_post(post)
+    })
+}
+
+function format_single_post(post) {
+  show_single_post_view()
+  checkLikeStatus(post.id)
+  check_profile_owner(post.created_by_id)
+  console.log('post created by - from load single post ' + post.created_by)
+  this_username = username_format(post.created_by)
+  document.getElementById('like-me').setAttribute('data_id', post.id)
+  document.getElementById('unlike-me').setAttribute('data_id', post.id)
+  document.getElementById('sender-img').src = post.profile_pic
+  document.getElementById('post-sender').textContent = this_username
+  document.getElementById('post-date').textContent =
+    'Originally posted on: ' + post.create_date
+  document.getElementById('post-text').textContent = post.body
+  document.getElementById('post-title').textContent = post.title
+  document.getElementById('post-likes').textContent =
+    'Number of likes: ' + post.likes
+}
+
+// --------------------------- Like Functions -------------------------//
+function checkLikeStatus(id) {
+  // Updates the buttons when first rendered based on information in the db.
+  fetch(`/api/check_like_status/${id}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.liked) {
+        document.getElementById('like-me').disabled = true
+        document.getElementById('unlike-me').disabled = false
+      } else {
+        document.getElementById('like-me').disabled = false
+        document.getElementById('unlike-me').disabled = true
+      }
+    })
+}
+
+function get_post_for_likes() {
+  // Called by listener when 'like-me' button is clicked
+  button = document.getElementById('like-me')
+  button.disabled = true
+  document.getElementById('unlike-me').disabled = false
+  id = button.getAttribute('data_id')
+  console.log('get post for likes id:' + id)
+  fetch(`/api/update_likes/${id}`).then(get_new_count)
+}
+
+function get_post_for_unlikes() {
+  button = document.getElementById('unlike-me')
+  button.disabled = true
+  document.getElementById('like-me').disabled = false
+  id = button.getAttribute('data_id')
+  fetch(`/api/update_unlikes/${id}`).then(toggle_likes).then(get_new_count)
+}
+
+function get_new_count() {
+  const id = document.getElementById('like-me').getAttribute('data_id')
+  fetch(`api/count_likes/${id}`)
+    .then(response => response.json())
+    .then(count => {
+      document.getElementById('post-likes').textContent =
+        'Number of likes: ' + count.count
+    })
+}
+
+// ---------------------------  New Posts -------------------------//
+// Add Post: Enables the submit button when the there is input in the form.
+function activate_post_btn() {
+  document.getElementById('add_post_btn').disabled = false
+}
+
 // --------------------------- Edit Posts -------------------------//
 function edit_my_post() {
   const id = document.getElementById('like-me').getAttribute('data_id')
@@ -260,6 +369,7 @@ function submit_edit_form(form, id) {
     })
     .catch(error => console.error('Submission error:', error))
 }
+
 // --------------------------- Display Profile -------------------------//
 function load_profile(id) {
   // Get profile
@@ -270,6 +380,7 @@ function load_profile(id) {
       format_profile(member)
     })
 }
+
 function format_profile(member) {
   show_profile_view()
   checkFollowingStatus(member.id)
@@ -312,74 +423,6 @@ function check_profile_owner(id) {
     })
 }
 
-// --------------------------- Display one Post -------------------------//
-function load_single_post(id) {
-  // variables
-  // Get Posts
-  fetch(`/api/single_post/${id}`)
-    .then(response => response.json())
-    .then(post => {
-      // send to format the list
-      format_single_post(post)
-    })
-}
-function format_single_post(post) {
-  show_single_post_view()
-  checkLikeStatus(post.id)
-  check_profile_owner(post.created_by_id)
-  console.log('post created by - from load single post ' + post.created_by)
-  this_username = username_format(post.created_by)
-  document.getElementById('like-me').setAttribute('data_id', post.id)
-  document.getElementById('unlike-me').setAttribute('data_id', post.id)
-  document.getElementById('sender-img').src = post.profile_pic
-  document.getElementById('post-sender').textContent = this_username
-  document.getElementById('post-date').textContent =
-    'Originally posted on: ' + post.create_date
-  document.getElementById('post-text').textContent = post.body
-  document.getElementById('post-title').textContent = post.title
-  document.getElementById('post-likes').textContent =
-    'Number of likes: ' + post.likes
-}
-// --------------------------- Like Functions -------------------------//
-function checkLikeStatus(id) {
-  // Updates the buttons when first rendered based on information in the db.
-  fetch(`/api/check_like_status/${id}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.liked) {
-        document.getElementById('like-me').disabled = true
-        document.getElementById('unlike-me').disabled = false
-      } else {
-        document.getElementById('like-me').disabled = false
-        document.getElementById('unlike-me').disabled = true
-      }
-    })
-}
-function get_post_for_likes() {
-  // Called by listener when 'like-me' button is clicked
-  button = document.getElementById('like-me')
-  button.disabled = true
-  document.getElementById('unlike-me').disabled = false
-  id = button.getAttribute('data_id')
-  console.log('get post for likes id:' + id)
-  fetch(`/api/update_likes/${id}`).then(get_new_count)
-}
-function get_post_for_unlikes() {
-  button = document.getElementById('unlike-me')
-  button.disabled = true
-  document.getElementById('like-me').disabled = false
-  id = button.getAttribute('data_id')
-  fetch(`/api/update_unlikes/${id}`).then(toggle_likes).then(get_new_count)
-}
-function get_new_count() {
-  const id = document.getElementById('like-me').getAttribute('data_id')
-  fetch(`api/count_likes/${id}`)
-    .then(response => response.json())
-    .then(count => {
-      document.getElementById('post-likes').textContent =
-        'Number of likes: ' + count.count
-    })
-}
 // --------------------------- Follow Functions -------------------------//
 function checkMemberIsAuthor(id) {
   fetch(`/api/check_member_is_author/${id}`)
@@ -522,4 +565,5 @@ function show_filtered_posts_view() {
   document.querySelector('#member-posts').style.display = 'none'
   document.querySelector('#follow-btns').style.display = 'none'
   document.querySelector('#filtered-posts').style.display = 'block'
+  document.querySelector('#post_lists').style.display = 'block'
 }
