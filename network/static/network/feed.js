@@ -472,6 +472,7 @@ function toggle_follow() {
 function show_all_posts_view() {
   document.querySelector('#welcome').style.display = 'block'
   document.querySelector('#all-posts').style.display = 'block'
+  document.querySelector('#post_lists').style.display = 'block'
   document.querySelector('#profile').style.display = 'none'
   document.querySelector('#profile-posts').style.display = 'none'
   document.querySelector('#single-post').style.display = 'none'
@@ -480,25 +481,23 @@ function show_all_posts_view() {
 }
 function show_profile_view() {
   document.querySelector('#welcome').style.display = 'block'
-  document.querySelector('#all-posts').style.display = 'none'
+  document.querySelector('#post_lists').style.display = 'none'
   document.querySelector('#profile-posts').style.display = 'block'
   document.querySelector('#profile').style.display = 'block'
   document.querySelector('#single-post').style.display = 'none'
   document.querySelector('#member-posts').style.display = 'none'
   document.querySelector('#follow-btns').style.display = 'block'
-  document.querySelector('#filtered-posts').style.display = 'none'
   if (!memberName) {
     document.querySelector('#follow-btns').style.display = 'none'
   }
 }
 function show_single_post_view() {
   document.querySelector('#welcome').style.display = 'none'
-  document.querySelector('#all-posts').style.display = 'none'
+  document.querySelector('#post_lists').style.display = 'none'
   document.querySelector('#profile-posts').style.display = 'none'
   document.querySelector('#profile').style.display = 'none'
   document.querySelector('#single-post').style.display = 'block'
   document.querySelector('#member-posts').style.display = 'none'
-  document.querySelector('#filtered-posts').style.display = 'none'
   if (!memberName) {
     document.querySelector('#like-btns').style.display = 'none'
     document.querySelector('#edit_post_btn').style.display = 'none'
@@ -507,12 +506,11 @@ function show_single_post_view() {
 }
 function show_member_post_view() {
   document.querySelector('#welcome').style.display = 'block'
-  document.querySelector('#all-posts').style.display = 'none'
+  document.querySelector('#post_lists').style.display = 'none'
   document.querySelector('#profile-posts').style.display = 'none'
   document.querySelector('#profile').style.display = 'none'
   document.querySelector('#single-post').style.display = 'none'
   document.querySelector('#member-posts').style.display = 'block'
-  document.querySelector('#filtered-posts').style.display = 'none'
 }
 function show_filtered_posts_view() {
   load_filtered_feed()
