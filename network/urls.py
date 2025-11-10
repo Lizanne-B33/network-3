@@ -33,7 +33,8 @@ urlpatterns = [
     path("api/check_following_status/<int:id>",
          views.check_following_status, name="check_following_status"),
     path("api/follow_counts/<int:id>", views.follow_counts, name="follow_counts"),
-    path("api/filtered_feed", views.filtered_feed, name="filtered_feed"),
+    path("api/filtered_feed/<int:page>",
+         views.filtered_feed, name="filtered_feed"),
     path("api/display_edit/<int:id>", views.display_edit, name="display_edit"),
     path("api/check_member_profile_is_member/<int:id>",
          views.check_member_profile_is_member, name="check_member_profile_is_member")

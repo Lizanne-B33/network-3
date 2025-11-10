@@ -335,9 +335,11 @@ def follow_counts(request, id):
 # FOLLOW: see posts from the folks that the user follows.
 
 
-def filtered_feed(request):
+def filtered_feed(request, page):
     # step 1 get the users that are being followed.
     followed_users = request.user.get_following()
+    print(f'page is {page}')
+    print(followed_users)
 
     # step 2: get the posts from those users.
     # https://docs.djangoproject.com/en/5.2/ref/models/querysets/

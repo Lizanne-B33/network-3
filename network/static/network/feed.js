@@ -72,7 +72,6 @@ if (
 
 function load_feed(direction) {
   //direction takes the input from the buttons.  Next = 1, Previous = -1.
-  // variables
   // track page
   page = page + direction
 
@@ -92,6 +91,7 @@ function load_feed(direction) {
       return response.json()
     })
     .then(posts => {
+      p_button_mgt_all(posts.length)
       format_feed(posts, '#all-posts')
     })
     .catch(error => {
@@ -112,12 +112,12 @@ function load_member_feed(memberName, direction) {
 
   // clears the posts from previous page.
   document.getElementById('member-post-list').innerHTML = '' // Clear old posts
-  console.log('before fetch the user name is: ' + created_by)
   // Get Posts
   fetch(`/api/single_feed/${created_by}/${page} `)
     .then(response => response.json())
     .then(posts => {
       if (Array.isArray(posts)) {
+        p_button_mgt_single(posts.length)
         // send to format the list
         format_feed(posts, '#member-post-list')
       } else {
@@ -137,14 +137,33 @@ function load_member_feed(memberName, direction) {
   document.getElementById('create_edit_post').textContent = 'Create Post'
 }
 
-function load_filtered_feed() {
-  //document.querySelector('#filtered_posts').innerHTML = ''
+function load_filtered_feed(direction) {
+  //direction takes the input from the buttons.  Next = 1, Previous = -1.
+  const newPage = page + direction
+  // track page
+  console.log('filtered-page before the increment: ' + page)
+
   // Get Posts
-  fetch('/api/filtered_feed')
-    .then(response => response.json())
+  fetch(`/api/filtered_feed/${newPage}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
     .then(posts => {
-      // send to format the list
+      if (posts.length === 0 && direction === 1) {
+        console.log('No more posts to show.')
+        return // Don't increment page if no posts on next
+      }
+      page = newPage
+
+      document.querySelector('#filtered-posts').innerHTML = ''
+      p_button_mgt_all(posts.length)
       format_feed(posts, '#filtered-posts')
+    })
+    .catch(error => {
+      console.error('Fetch error:', error)
     })
 }
 
@@ -493,6 +512,19 @@ function update_follow_data() {
 }
 
 // --------------------------- Helper Functions -------------------------//
+function p_button_mgt_single(postCount) {
+  const prevBtn = document.getElementById('next_btn_mbr')
+  const nextBtn = document.getElementById('previous_btn_mbr')
+  prevBtn.style.display = page <= 1 ? 'none' : 'inline-block'
+  nextBtn.style.display = postCount < 10 ? 'none' : 'inline-block'
+}
+
+function p_button_mgt_all(postCount) {
+  const prevBtn = document.getElementById('previous_btn')
+  const nextBtn = document.getElementById('next_btn')
+  prevBtn.style.display = page <= 1 ? 'none' : 'inline-block'
+  nextBtn.style.display = postCount < 10 ? 'none' : 'inline-block'
+}
 
 function username_format(username) {
   s1 = username
@@ -568,6 +600,7 @@ function show_member_post_view() {
   document.querySelector('#member-posts').style.display = 'block'
 }
 function show_filtered_posts_view() {
+  console.log('filtered posts was called')
   load_filtered_feed()
   document.querySelector('#welcome').style.display = 'none'
   document.querySelector('#all-posts').style.display = 'none'
