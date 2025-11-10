@@ -139,9 +139,9 @@ def display_edit(request, id):
         }, request=request)
         return JsonResponse({'form_html': form_html})
 
-    except Exception as e:
-        print('Error in display_edit:', e)
-        return JsonResponse({'error': str(e)}, status=500)
+    except Exception as error:
+        print('Error in display_edit:', error)
+        return JsonResponse({'error': str(error)}, status=500)
 
 
 def check_member_profile_is_member(request, id):
@@ -237,11 +237,19 @@ def single_profile(request, id):
 def single_feed(request, created_by, page):
     # collects the data for the posts that were created by that user.
     # since created by is a FK, I need to look up the User object by user name then filter by the user.
+    print('Created by passed to function: ' + str(created_by))
+
     user = get_object_or_404(User, username=created_by)
-    posts = Post.objects.filter(created_by=user)
+
+    print('UserName used in filter: ' + str(user))
+
+    posts = Post.objects.filter(created_by=user).order_by("create_date", "id")
     if posts:
-        posts = posts.order_by("create_date").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        posts = list(posts)
+        start = (page - 1) * 10
+        end = page * 10
+        p_posts = posts[start:end]
+        return JsonResponse([post.serialize() for post in p_posts], safe=False)
     else:
         return JsonResponse({"text": "You don't have any posts yet."})
 

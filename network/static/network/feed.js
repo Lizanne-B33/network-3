@@ -40,7 +40,7 @@ if (
       .getElementById('edit-post-button')
       .addEventListener('click', edit_my_post)
 
-    // Pagination Button: Listeners
+    // Pagination Button: Listeners: Multiple Members
     document.getElementById('next_btn').addEventListener('click', function () {
       load_feed(1)
     })
@@ -54,6 +54,20 @@ if (
         }
       })
   })
+  // Pagination for the posts on the profile page.
+  document
+    .getElementById('next_btn_mbr')
+    .addEventListener('click', function () {
+      load_member_feed(memberName, 1)
+    })
+
+  document
+    .getElementById('previous_btn_mbr')
+    .addEventListener('click', function () {
+      if (page > 1) {
+        load_member_feed(memberName, -1)
+      }
+    })
 }
 
 function load_feed(direction) {
@@ -88,23 +102,17 @@ function load_feed(direction) {
 function load_member_feed(memberName, direction) {
   // variables
   created_by = memberName
-
+  console.log('page before increment ' + page)
   // track page
   page = page + direction
+  console.log('page after increment ' + page)
 
   // set views:
   show_member_post_view()
 
   // clears the posts from previous page.
   document.getElementById('member-post-list').innerHTML = '' // Clear old posts
-
-  // activates post button if there is any input in the body.
-  const bodyElement = document.getElementById('id_body')
-  if (bodyElement) {
-    bodyElement.addEventListener('input', activate_post_btn)
-  }
-  document.getElementById('create_edit_post').textContent = 'Create Post'
-
+  console.log('before fetch the user name is: ' + created_by)
   // Get Posts
   fetch(`/api/single_feed/${created_by}/${page} `)
     .then(response => response.json())
@@ -119,6 +127,14 @@ function load_member_feed(memberName, direction) {
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error)
     })
+
+  // Save post button
+  // activates post button if there is any input in the body.
+  const bodyElement = document.getElementById('id_body')
+  if (bodyElement) {
+    bodyElement.addEventListener('input', activate_post_btn)
+  }
+  document.getElementById('create_edit_post').textContent = 'Create Post'
 }
 
 function load_filtered_feed() {
@@ -402,7 +418,7 @@ function format_profile(member) {
   document.getElementById('follow-me').data_id = member.id
   document.getElementById('unfollow-me').data_id = member.id
 
-  load_member_feed(member.username)
+  load_member_feed(member.username, page)
 }
 
 function check_profile_owner(id) {
