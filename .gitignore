@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+pip-wheel-metadata/
+
+# Django
+local_settings.py
+settings_local.py
+
+# VS Code
+.vscode/
+.history/
+
+# Node/Prettier (if using npm or prettier plugins)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+bun.lock
+
+# EditorConfig backup
+.editorconfig.sav
+
+# Pre-commit hooks
+.pre-commit-config.yaml
+.pre-commit-hooks.yaml
+
+# Coverage and testing
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+nosetests.xml
+test-results/
+
+# Misc
+*.bak
+*.swp
+*.tmp
+.DS_Store
+Thumbs.db

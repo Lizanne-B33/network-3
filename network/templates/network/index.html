@@ -1,0 +1,154 @@
+{% extends "network/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+
+    {% if message %}<div>{{ message }}</div>{% endif %}
+    <div id="index-container" class="container">
+        <div id="welcome">
+            <!--used to hide or show sections-->
+            <h1 id="welcome-h"></h1>
+            <p id="welcome-p"></p>
+            <hr />
+        </div>
+        <div id="all-posts"></div>
+        <div id="filtered-posts"></div>
+        <!--used to hide or show sections-->
+        <div id="profile">
+            <!--used to hide or show sections-->
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <img id="profile-img" class="img-fluid mx-0 d-block" alt="profile image" />
+                        </div>
+                        <div class="col-12 mx=5" id="follow-btns">
+                            <!-- https://home.unicode.org/ -->
+                            <button type="submit" class="follow-btn btn btn-default" id="follow-me" value="{{ user.id }}" disabled>
+                                &#x2795 &#x1F464 Follow
+                            </button>
+                            <button type="submit" class="follow-btn btn btn-default" id="unfollow-me" value="{{ user.id }}" disabled>
+                                &#x1F6AB &#x1F464 Unfollow
+                            </button>
+                            <br />
+                            <hr />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col">
+                            <h3 id="profile-name"></h3>
+                            <p class="font-italic font-weight-light" id="start-date"></p>
+                            <hr />
+                            <br />
+                            <p id="bio"></p>
+                            <br />
+                            <div class="row" id="follow-section">
+                                <div class="col-lg-4 following">
+                                    <p id="following"></p>
+                                    <p id="followed-by"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="member-posts">
+            <!--used to hide or show sections-->
+            <h4 id="create_edit_post"></h4>
+            <div class="row">
+                <div class="col-lg-6">
+                    <form action="{% url 'add_post' %}" method="POST" enctype="multipart/form-data" class="flex-form">
+                        <div class="form-group" id="add-post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" id="add_post_btn" disabled>Save Post</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6">
+                    <div id="member-post-list">
+                        <p id="no-posts-msg"></p>
+                        '
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="profile-posts"></div>
+        <!--used to hide or show sections-->
+        <div id="single-post">
+            <!--used to hide or show sections-->
+            <div class="row">
+                <div class="col-2"></div>
+                <!--Used for creating space-->
+                <div id="post-background" class="col-8">
+                    <!--used in CSS-->
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 id="post-logo-style">Wondergram</h3>
+                            <!--used in CSS-->
+                            <hr />
+                            <br />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--Header-->
+                        <div col-4>
+                            <img id="sender-img" />
+                        </div>
+                        <div col-8>
+                            <p class="text-capitalize" id="post-sender"></p>
+                            <p class="font-italic font-weight-light" id="post-date"></p>
+                        </div>
+                    </div>
+                    <div id="body-background" class="row">
+                        <!--For CSS- body-->
+                        <div id="post-title" class="col-12"></div>
+                        <div id="post-text" class="col-12"></div>
+                    </div>
+                    <div class="row">
+                        <!--footer-->
+                        <div id="like-btns" class="col-4">
+                            <button type="submit" class="like-btn btn btn-default" id="like-me" value="{{ post.id }}" disabled>
+                                &#x1F496 Like
+                            </button>
+                            <button type="submit" class="like-btn btn btn-default" id="unlike-me" value="{{ post.id }}" disabled>
+                                &#x1F494 UnLike
+                            </button>
+                        </div>
+                        <div class="col-4 mt-1">
+                            <p id="post-likes"></p>
+                        </div>
+                        <div id="edit_my_post" class="col-4 mt-1">
+                            <button id="edit-post-button">Edit Post</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--edit-->
+                        <div id="edit_post" class="col-12">
+                            <form id="edit-post-form" method="POST">
+                                <div class="form-group">
+                                    {% csrf_token %}
+                                    {{ formEdit.body }}
+                                    <button type="submit" id="edit_post_btn">Save Post</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block script %}
+
+    <script src="{% static 'network/feed.js' %}"></script>
+    <!-- Using this to pass the username from the login view to the index.html.
+    This was found with help from the duck. apparently I'm using Jinja -->
+    <script> const memberName = "{{ memberName }}";</script>
+    <script> const postId = "{{ post.id }}";</script>
+{% endblock script %}

@@ -1,0 +1,63 @@
+.profile-listener {
+  cursor: pointer;
+}
+.post-listener {
+  cursor: pointer;
+}
+
+.following {
+  align-items: center;
+}
+
+#post-background {
+  background-color: #f9f9f9;
+  border-style: ridge;
+  border-radius: 15px;
+}
+
+#profile-img {
+  width: 300px;
+  border-style: groove;
+  border-radius: 15%;
+  border-color: #ababab;
+  margin-bottom: 15px;
+}
+
+/*https://www.w3schools.com/css/css_font_google.asp*/
+#post-logo-style {
+  font-family: 'Sofia', sans-serif;
+  font-style: italic;
+  font-size: 42px;
+  text-shadow: 3px 3px 3px #ababab;
+}
+/* for the circular image of the user */
+#sender-img {
+  border-radius: 50%;
+  width: 75px;
+  margin-left: 15px;
+}
+#post-sender {
+  font-family: 'Vend_Sans', sans-serif;
+  font-size: 30px;
+  margin-left: 15px;
+}
+#body-background {
+  background-color: #d3d3d3;
+  padding: 30px;
+}
+
+#like-buttons {
+  text-align: center;
+}
+
+.col-date {
+  font-style: italic;
+  font-weight: 300;
+}
+
+#post-title {
+  font-weight: 700;
+  font-family: 'Vend_Sans', sans-serif;
+  font-size: 25px;
+  margin-bottom: 15px;
+}

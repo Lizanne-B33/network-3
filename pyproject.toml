@@ -1,0 +1,15 @@
+# pyproject.toml
+
+[tool.djlint]
+profile = "django"
+indent = 4
+max_line_length = 120
+close_void_tags = true
+max_attribute_length = 100
+include = ["**/templates/**/*.html", "**/templates/**/*.djhtml"]
+exclude = "**/migrations/**,**/static/**,**/node_modules/**"
+ignore = "h014"
+
+# Use single strings for blank line settings
+blank_line_before_tag = "block, for, if, extends, include"
+blank_line_after_tag = "block, for, if, load, extends, include"

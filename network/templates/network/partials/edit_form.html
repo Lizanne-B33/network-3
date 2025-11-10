@@ -1,0 +1,9 @@
+<!-- to display the edit form.  I had a lot of trouble with this
+part! -->
+<form id="edit-post-form" method="POST">
+  <div class="form-group">
+    {% csrf_token %}
+    {{ formEdit.body }}
+    <button type="submit" id="edit_post_btn">Save Post</button>
+  </div>
+</form>
