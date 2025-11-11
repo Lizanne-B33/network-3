@@ -18,12 +18,8 @@
             <br />
             <hr />
             <div id="pagination" class="row">
-                <div id="p-previous" class="col-4">
-                    <button id="previous_btn" class="btn btn-primary pagination-btns p-btn-prev" type="button">&laquo; Previous</button>
-                </div>
-                <div id="p-next" class="col-4">
-                    <button id="next_btn" class="btn btn-primary pagination-btns p-btn-next" type="button">Next &raquo;</button>
-                </div>
+                <button id="previous_btn" class="btn btn-primary pagination-btns p-btn-prev" type="button">&laquo; Previous</button>
+                <button id="next_btn" class="btn btn-primary pagination-btns p-btn-next" type="button">Next &raquo;</button>
             </div>
         </div>
         <!--used to hide or show sections-->
@@ -88,83 +84,80 @@
                     <br />
                     <hr />
                     <div id="pagination-mbr" class="row">
-                        <div id="p-previous-mbr" class="col-4">
-                            <button id="previous_btn_mbr" class="btn btn-primary pagination-btns p-btn-prev" type="button">
-                                &laquo; Previous
-                            </button>
-                        </div>
-                        <div id="p-next-mbr" class="col-4">
-                            <button id="next_btn_mbr" class="btn btn-primary pagination-btns p-btn-next" type="button">Next &raquo;</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="profile-posts"></div>
-        <!--used to hide or show sections-->
-        <div id="single-post">
-            <!--used to hide or show sections-->
-            <div class="row">
-                <div class="col-2"></div>
-                <!--Used for creating space-->
-                <div id="post-background" class="col-8">
-                    <!--used in CSS-->
-                    <div class="row">
-                        <div class="col-12">
-                            <h3 id="post-logo-style">Wondergram</h3>
-                            <!--used in CSS-->
-                            <hr />
-                            <br />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!--Header-->
-                        <div class="col-4">
-                            <img id="sender-img" />
-                        </div>
-                        <div class="col-8">
-                            <p class="text-capitalize" id="post-sender"></p>
-                            <p class="font-italic font-weight-light" id="post-date"></p>
-                        </div>
-                    </div>
-                    <div id="body-background" class="row">
-                        <!--For CSS- body-->
-                        <div id="post-title" class="col-12"></div>
-                        <div id="post-text" class="col-12"></div>
-                    </div>
-                    <div class="row">
-                        <!--footer-->
-                        <div id="like-btns" class="col-4">
-                            <button type="submit" class="like-btn btn btn-default" id="like-me" value="{{ post.id }}" disabled>
-                                &#x1F496 Like
-                            </button>
-                            <button type="submit" class="like-btn btn btn-default" id="unlike-me" value="{{ post.id }}" disabled>
-                                &#x1F494 UnLike
-                            </button>
-                        </div>
-                        <div class="col-4 mt-1">
-                            <p id="post-likes"></p>
-                        </div>
-                        <div id="edit_my_post" class="col-4 mt-1">
-                            <button id="edit-post-button">Edit Post</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!--edit-->
-                        <div id="edit_post" class="col-12">
-                            <form id="edit-post-form" method="POST">
-                                <div class="form-group">
-                                    {% csrf_token %}
-                                    {{ formEdit.body }}
-                                    <button type="submit" id="edit_post_btn">Save Post</button>
-                                </div>
-                            </form>
-                        </div>
+                        <button id="previous_btn_mbr" class="btn btn-primary pagination-btns p-btn-prev" type="button">
+                            &laquo; Previous
+                        </button>
+                        <button id="next_btn_mbr" class="btn btn-primary pagination-btns p-btn-next" type="button">Next &raquo;</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="profile-posts"></div>
+    <!--used to hide or show sections-->
+    <div id="single-post">
+        <!--used to hide or show sections-->
+        <div class="row">
+            <div class="col-2"></div>
+            <!--Used for creating space-->
+            <div id="post-background" class="col-8">
+                <!--used in CSS-->
+                <div class="row">
+                    <div class="col-12">
+                        <h3 id="post-logo-style">Wondergram</h3>
+                        <!--used in CSS-->
+                        <hr />
+                        <br />
+                    </div>
+                </div>
+                <div class="row">
+                    <!--Header-->
+                    <div class="col-4">
+                        <img id="sender-img" />
+                    </div>
+                    <div class="col-8">
+                        <p class="text-capitalize" id="post-sender"></p>
+                        <p class="font-italic font-weight-light" id="post-date"></p>
+                    </div>
+                </div>
+                <div id="body-background" class="row">
+                    <!--For CSS- body-->
+                    <div id="post-title" class="col-12"></div>
+                    <div id="post-text" class="col-12"></div>
+                </div>
+                <div class="row">
+                    <!--footer-->
+                    <div id="like-btns" class="col">
+                        <button type="submit" class="like-btn btn btn-default" id="like-me" value="{{ post.id }}" disabled>
+                            &#x1F496 Like
+                        </button>
+                        <button type="submit" class="like-btn btn btn-default" id="unlike-me" value="{{ post.id }}" disabled>
+                            &#x1F494 UnLike
+                        </button>
+                    </div>
+                    <div class="col-4 mt-1">
+                        <p id="post-likes"></p>
+                    </div>
+                    <div id="edit_my_post" class="col mt-1">
+                        <button id="edit-post-button">Edit Post</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--edit-->
+                    <div id="edit_post" class="col-12">
+                        <form id="edit-post-form" method="POST">
+                            <div class="form-group">
+                                {% csrf_token %}
+                                {{ formEdit.body }}
+                                <button type="submit" id="edit_post_btn">Save Post</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock body %}
 
 {% block script %}
