@@ -405,7 +405,9 @@ function submit_edit_form(form, id) {
 // --------------------------- Display Profile -------------------------//
 function load_profile(id) {
   console.log('the profile has been called')
+  console.log('the id is: ' + id)
   // Get profile
+  console.log('the load to single Profile is id: ' + id)
   fetch(`/api/single_profile/${id} `)
     .then(response => response.json())
     .then(member => {
@@ -434,13 +436,13 @@ function format_profile(member) {
     'Member since ' + member.start_date
   document.getElementById('bio').textContent = member.bio
   document.getElementById('following').textContent =
-    'Following: ' + member.followers
+    'Following: ' + member.following
   document.getElementById('followed-by').textContent =
-    'Followed by: ' + member.following
+    'Followed by: ' + member.followers
   document.getElementById('follow-me').data_id = member.id
   document.getElementById('unfollow-me').data_id = member.id
 
-  load_profile(member.username, page)
+  // load_profile(member.id, page)
 }
 
 function check_profile_owner(id) {
@@ -469,12 +471,14 @@ function checkMemberIsAuthor(id) {
 }
 function checkFollowingStatus(id) {
   // Updates the buttons when first rendered based on information in the db.
+  console.log('check following status id: ' + id)
   fetch(`/api/check_following_status/${id}`)
     .then(response => response.json())
     .then(data => {
       if (data.following) {
         document.getElementById('follow-me').disabled = true
         document.getElementById('unfollow-me').disabled = false
+        console.log(data)
       } else {
         document.getElementById('follow-me').disabled = false
         document.getElementById('unfollow-me').disabled = true

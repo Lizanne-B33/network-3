@@ -292,7 +292,8 @@ def check_member_is_author(request, id):
 def check_following_status(request, id):
     # Used when form is first rendered to set the buttons.
     user = User.objects.get(id=id)
-    following = request.user in user.following.all()
+    following = request.user in user.followed_by.all()
+    print('following: ' + str(following))
     return JsonResponse({'following': following})
 
 
