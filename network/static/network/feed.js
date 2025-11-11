@@ -113,16 +113,19 @@ function load_member_feed(memberName, direction) {
 
   // clears the posts from previous page.
   document.getElementById('member-post-list').innerHTML = '' // Clear old posts
+
   // Get Posts
-  fetch(`/api/single_feed/${created_by}/${page} `)
+  fetch(`/api/single_feed/${created_by}/${page}`)
     .then(response => response.json())
     .then(posts => {
       if (Array.isArray(posts)) {
         p_button_mgt_single(posts.length)
         // send to format the list
         format_feed(posts, '#member-post-list')
+        format_feed(posts, '#profile-posts')
       } else {
         document.getElementById('no-posts-msg').textContent = posts.text
+        hide_if_no_posts_view()
       }
     })
     .catch(error => {
@@ -417,7 +420,6 @@ function load_profile(id) {
 }
 
 function format_profile(member) {
-  console.log('format profile has been called')
   show_profile_view()
   checkFollowingStatus(member.id)
   checkMemberIsAuthor(member.id)
@@ -618,4 +620,7 @@ function show_filtered_posts_view() {
   document.querySelector('#follow-btns').style.display = 'none'
   document.querySelector('#filtered-posts').style.display = 'block'
   document.querySelector('#post_lists').style.display = 'block'
+}
+function hide_if_no_posts_view() {
+  document.querySelector('#pagination-mbr').style.display = 'none'
 }
