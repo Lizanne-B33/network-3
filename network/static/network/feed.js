@@ -1,5 +1,6 @@
 // Global variables
 let page = 1
+let pages = 1
 
 if (
   window.location.pathname !== '/login' &&
@@ -403,8 +404,9 @@ function submit_edit_form(form, id) {
 
 // --------------------------- Display Profile -------------------------//
 function load_profile(id) {
+  console.log('the profile has been called')
   // Get profile
-  fetch(`/api/single_profile/${id}`)
+  fetch(`/api/single_profile/${id} `)
     .then(response => response.json())
     .then(member => {
       // send to format the list
@@ -413,6 +415,7 @@ function load_profile(id) {
 }
 
 function format_profile(member) {
+  console.log('format profile has been called')
   show_profile_view()
   checkFollowingStatus(member.id)
   checkMemberIsAuthor(member.id)
@@ -437,7 +440,7 @@ function format_profile(member) {
   document.getElementById('follow-me').data_id = member.id
   document.getElementById('unfollow-me').data_id = member.id
 
-  load_member_feed(member.username, page)
+  load_profile(member.username, page)
 }
 
 function check_profile_owner(id) {
@@ -513,8 +516,8 @@ function update_follow_data() {
 
 // --------------------------- Helper Functions -------------------------//
 function p_button_mgt_single(postCount) {
-  const prevBtn = document.getElementById('next_btn_mbr')
-  const nextBtn = document.getElementById('previous_btn_mbr')
+  const prevBtn = document.getElementById('previous_btn_mbr')
+  const nextBtn = document.getElementById('next_btn_mbr')
   prevBtn.style.display = page <= 1 ? 'none' : 'inline-block'
   nextBtn.style.display = postCount < 10 ? 'none' : 'inline-block'
 }
@@ -601,7 +604,7 @@ function show_member_post_view() {
 }
 function show_filtered_posts_view() {
   console.log('filtered posts was called')
-  load_filtered_feed()
+  load_filtered_feed(0)
   document.querySelector('#welcome').style.display = 'none'
   document.querySelector('#all-posts').style.display = 'none'
   document.querySelector('#profile-posts').style.display = 'none'

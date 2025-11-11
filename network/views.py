@@ -203,7 +203,6 @@ def count_likes(request, id):
 # ---------------------------------------------------------------
 def feed(request, page):
     print(f'page is {page}')
-    posts = Post.objects
     # added id to make certain there are no duplicates
     # caching to avoid misalignment.
     posts = list(Post.objects.order_by("created_by", "-create_date", "-id"))
@@ -338,8 +337,9 @@ def follow_counts(request, id):
 def filtered_feed(request, page):
     # step 1 get the users that are being followed.
     followed_users = request.user.get_following()
+    print(f' registered user is: {request.user}')
     print(f'page is {page}')
-    print(followed_users)
+    print(f'followed users are {followed_users}')
 
     # step 2: get the posts from those users.
     # https://docs.djangoproject.com/en/5.2/ref/models/querysets/
