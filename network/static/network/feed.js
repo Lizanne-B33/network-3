@@ -122,7 +122,6 @@ function load_member_feed(memberName, direction) {
         p_button_mgt_single(posts.length)
         // send to format the list
         format_feed(posts, '#member-post-list')
-        format_feed(posts, '#profile-posts')
       } else {
         document.getElementById('no-posts-msg').textContent = posts.text
         hide_if_no_posts_view()
@@ -416,6 +415,22 @@ function load_profile(id) {
     .then(member => {
       // send to format the list
       format_profile(member)
+      document.getElementById('profile-posts').innerHTML = '' // Clear form
+      fetch(`/api/single_feed/${member.username}/${page}`)
+        .then(response => response.json())
+        .then(posts => {
+          if (Array.isArray(posts)) {
+            //p_button_mgt_single(posts.length)
+            // send to format the list
+            format_feed(posts, '#profile-posts')
+          } else {
+            document.getElementById('no-posts-msg').textContent = posts.text
+            hide_if_no_posts_view()
+          }
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error)
+        })
     })
 }
 
